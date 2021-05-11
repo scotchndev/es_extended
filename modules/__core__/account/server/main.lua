@@ -18,7 +18,6 @@ addMoneyCommand:addArgument("account", "string", _U('account_account_name'))
 addMoneyCommand:addArgument("amount", "number", _U('account_money_value'))
 addMoneyCommand:setHandler(function(player, args)
   if not args.account then
-    print("TESTE")
     emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
     return
   end
