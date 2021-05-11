@@ -34,30 +34,24 @@ Account.TransactionError = function(account)
   utils.ui.showNotification(_U('account_notify_transaction_error', account))
 end
 
-Account.ShowMoney = function()
+Account.ShowMoney = function(accounts)
+
   local Accounts = {}
+  local index = 0
 
-  request('esx:account:getPlayerAccounts', function(data)
-    if data then
-      local Accounts = {}
-      local index = 0
+  for k,v in ipairs(accounts) do
+    Accounts[index] = {
+      id = index,
+      type = k,
+      amount = v
+    }
+    index = index + 1
+  end
 
-      for k,v in pairs(Config.Modules.Account.AccountsIndex) do
-        if data[v] and not Accounts[v] then
-          index = index + 1
-          table.insert(Accounts, {
-            id = index,
-            type = v,
-            amount = data[v]
-          })
-        end
-      end
+  module.Frame:postMessage({
+    data = Accounts
+  })
 
-      module.Frame:postMessage({
-        data = Accounts
-      })
-    end
-  end)
 end
 
 module.Frame = Frame('account', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/account/data/html/index.html', true)

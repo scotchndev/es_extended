@@ -24,6 +24,6 @@ onServer('esx:account:transactionError', function(account)
   Account.TransactionError(account)
 end)
 
-onServer('esx:account:showMoney', function()
-  Account.ShowMoney()
+onServer('esx:account:showMoney', function(accounts)
+  Account.ShowMoney(accounts)
 end)

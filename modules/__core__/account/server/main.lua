@@ -10,54 +10,63 @@
 --   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 --   This copyright should appear in every part of the project code
 
-local utils = M('utils')
 M("command")
 
 local addMoneyCommand = Command("addmoney", "admin", _U('account_add_money'))
-addMoneyCommand:addArgument("account", "string", _U('account_account_name'))
-addMoneyCommand:addArgument("money", "number", _U('account_money_value'))
 addMoneyCommand:addArgument("player", "player", _U('commandgeneric_playerid'))
+addMoneyCommand:addArgument("account", "string", _U('account_account_name'))
+addMoneyCommand:addArgument("amount", "number", _U('account_money_value'))
 addMoneyCommand:setHandler(function(player, args)
-  if args.account and args.money then
-	if not args.player then args.player = player end
-	emit("esx:account:addMoney", args.account, args.money, args.player)
-	return
-  else
-	if not args.account then
-		emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
-		return
-	elseif not args.money then
-		emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commanderror_money')}})
-		return
-	end
+  if not args.account then
+    print("TESTE")
+    emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
+    return
   end
+
+  if not args.amount then
+    emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commanderror_money')}})
+    return
+  end
+
+	if not args.player then args.player = player end
+
+  Account.AddIdentityMoney(args.player, args.account, args.amount)
+
 end)
 
 local removeMoneyCommand = Command("removemoney", "admin", _U('account_remove_money'))
-removeMoneyCommand:addArgument("account", "string", _U('account_account_name'))
-removeMoneyCommand:addArgument("money", "number", _U('account_money_value'))
 removeMoneyCommand:addArgument("player", "player", _U('commandgeneric_playerid'))
+removeMoneyCommand:addArgument("account", "string", _U('account_account_name'))
+removeMoneyCommand:addArgument("amount", "number", _U('account_money_value'))
 removeMoneyCommand:setHandler(function(player, args)
-if args.account and args.money then
-    if not args.player then args.player = player end
-    emit("esx:account:removeMoney", args.account, args.money, args.player)
+  if not args.account then
+    emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
     return
-  else
-    if not args.account then
-        emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
-        return
-    elseif not args.money then
-        emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commanderror_money')}})
-        return
-    end
   end
+
+  if not args.amount then
+    emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commanderror_money')}})
+    return
+  end
+
+  if not args.player then args.player = player end
+
+  Account.RemoveIdentityMoney(args.player, args.account, args.amount)
+
 end)
 
 local showMoneyCommand = Command("money", "user", _U('account_show_money_test'))
 showMoneyCommand:setHandler(function(player, args)
-  emitClient("esx:account:showMoney", player.source)
+  if not args.player then args.player = player end
+
+  local player = Player.fromId(args.player.source)
+  local identity = player:getIdentity()
+  local accounts = identity:getAccounts()
+
+  emitClient("esx:account:showMoney", player.source, accounts:serialize())
 end)
 
+showMoneyCommand:register()
 addMoneyCommand:register()
 removeMoneyCommand:register()
-showMoneyCommand:register()
+
