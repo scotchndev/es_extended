@@ -39,13 +39,13 @@ Account.ShowMoney = function(accounts)
   local Accounts = {}
   local index = 0
 
-  for k,v in ipairs(accounts) do
+  for k,v in pairs(accounts) do
+    index = index + 1
     Accounts[index] = {
       id = index,
       type = k,
       amount = v
     }
-    index = index + 1
   end
 
   module.Frame:postMessage({
