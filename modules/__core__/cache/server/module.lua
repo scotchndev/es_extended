@@ -130,82 +130,6 @@ module.AddUsedPlates = function(cacheName, updateData)
 end
 
 -------------------------
---       Account       --
--------------------------
-
-module.RetrieveAccounts = function(identifier, id)
-  if module.Cache["identities"] then
-    if not module.Cache["identities"][identifier] then
-      module.Cache["identities"][identifier] = {}
-    end
-
-    if not module.Cache["identities"][identifier][id] then
-      module.Cache["identities"][identifier][id] = {}
-    end
-
-    if not module.Cache["identities"][identifier][id]["accounts"] then
-      module.Cache["identities"][identifier][id]["accounts"] = {}
-
-      for k,v in ipairs(Config.Modules.Account.AccountsIndex) do
-        module.Cache["identities"][identifier][id]["accounts"][v] = 100
-      end
-    end
-
-    return module.Cache["identities"][identifier][id]["accounts"]
-  else
-    return nil
-  end
-end
-
-module.AddMoneyToAccount = function(identifier, id, field, value)
-  if module.Cache["identities"][identifier][id]["accounts"] then
-    for k,v in pairs(module.Cache["identities"][identifier][id]["accounts"]) do
-      if tostring(k) == tostring(field) then
-        module.Cache["identities"][identifier][id]["accounts"][field] = module.Cache["identities"][identifier][id]["accounts"][field] + value
-
-        local result = {
-          type = "success",
-          value = module.Cache["identities"][identifier][id]["accounts"][field]
-        }
-
-        return result
-      end
-    end
-  else
-    return false
-  end
-end
-
-module.RemoveMoneyFromAccount = function(identifier, id, field, value)
-  if module.Cache["identities"][identifier][id]["accounts"] then
-    for k,v in pairs(module.Cache["identities"][identifier][id]["accounts"]) do
-      if tostring(k) == tostring(field) then
-        if module.Cache["identities"][identifier][id]["accounts"][field] then
-          if (v - value) >= 0 then
-            module.Cache["identities"][identifier][id]["accounts"][field] = v - value
-
-            local result = {
-              type = "success",
-              value = module.Cache["identities"][identifier][id]["accounts"][field]
-            }
-
-            return result
-          else
-            local result = {
-              type = "not_enough_money"
-            }
-
-            return result
-          end
-        end
-      end
-    end
-  else
-    return false
-  end
-end
-
--------------------------
 --      Statuses       --
 -------------------------
 
@@ -377,8 +301,8 @@ module.StartCache = function()
               end
 
               for k,v in pairs(data) do
-                if k == "status" or k == "accounts" then    
-                  if not module.Cache[tab][data.owner][data.id][k] then               
+                if k == "status" then
+                  if not module.Cache[tab][data.owner][data.id][k] then
                     if Config.Modules.Cache.EnableDebugging then
                       print("module.Cache["..tostring(tab).."]["..tostring(data.owner).."]["..tostring(data.id).."]["..tostring(k).."] = "..tostring(v))
                     end
@@ -436,7 +360,7 @@ module.StartCache = function()
 
         MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
           local index = 0
-          
+
           for _,data in ipairs(result) do
             index = index + 1
 
@@ -544,16 +468,6 @@ module.SaveCache = function()
 
                   MySQL.Async.execute('UPDATE identities SET status = @status WHERE id = @id AND owner = @owner', {
                     ['@status'] = json.encode(data),
-                    ['@id']     = tonumber(k2),
-                    ['@owner']  = tostring(k)
-                  })
-                elseif k3 == "accounts" then
-                  if Config.Modules.Cache.EnableDebugging then
-                    print("Updating Accounts In Cache For : ^2" .. tostring(k) .. "^7 with IdentityId ^2" .. tostring(k2) .. "^7")
-                  end
-
-                  MySQL.Async.execute('UPDATE identities SET accounts = @accounts WHERE id = @id AND owner = @owner', {
-                    ['@accounts'] = json.encode(data),
                     ['@id']     = tonumber(k2),
                     ['@owner']  = tostring(k)
                   })
