@@ -22,8 +22,8 @@ module.WalletShowing = false
 Account = {}
 Account.Ready, Account.Frame, Account.isPaused = false, nil, false
 
-Account.Notify = function(account, transactionAmount, balance)
-  utils.ui.showNotification(_U('account_notify_moneychange', _U('account_moniker'), transactionAmount, account, _U('account_moniker'), balance))
+Account.Notify = function(account, transactionAmount)
+  utils.ui.showNotification(_U('account_notify_moneychange', _U('account_moniker'), transactionAmount, account))
 end
 
 Account.NotEnoughMoney = function(account, money)

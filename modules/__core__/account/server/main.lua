@@ -29,7 +29,17 @@ addMoneyCommand:setHandler(function(player, args)
 
 	if not args.player then args.player = player end
 
-  Account.AddIdentityMoney(args.player, args.account, args.amount)
+  local player = Player.fromId(player.source)
+  local identity = player:getIdentity()
+  local accounts = identity:getAccounts()
+
+  accounts:addMoney(args.account,args.amount, function(result)
+    if result then
+      emitClient('esx:account:notify', args.player.source, args.account, args.amount)
+    else
+      emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
+    end
+  end)
 
 end)
 
@@ -50,7 +60,17 @@ removeMoneyCommand:setHandler(function(player, args)
 
   if not args.player then args.player = player end
 
-  Account.RemoveIdentityMoney(args.player, args.account, args.amount)
+  local player = Player.fromId(player.source)
+  local identity = player:getIdentity()
+  local accounts = identity:getAccoutns()
+
+  accounts:removeMoney(args.account, args.amount, function(result)
+    if result then
+      emitClient('esx:account:notify', args.player.source, args.account, args.amount)
+    else
+      emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
+    end
+  end)
 
 end)
 

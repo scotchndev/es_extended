@@ -26,42 +26,30 @@ Account.all = setmetatable({}, {
   __newindex = function(t, k, v) rawset(t, tostring(k), v) end,
 })
 
-Account.AddIdentityMoney = function(player, account, amount)
+function Account:addMoney(account, amount, cb)
 
-  local ply = Player.fromId(player.source)
-  local identity = ply:getIdentity()
-  local accounts = identity:getAccounts()
+  local oldAmount = self[account]
 
-  local oldQuantity = accounts[account]
-
-
-  if oldQuantity then
-    local newQuantity = oldQuantity + amount
-    accounts[account] = newQuantity
-    emitClient('esx:account:notify', player.source, account, amount, newQuantity)
+  if oldAmount then
+    self[account] = oldAmount + amount
+    if cb ~= nil then cb(true) end
   else
-    -- Invalid Account
-    emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
+    -- Acount does not exists
+    if cb ~= nil then cb(false) end
   end
 
 end
 
-Account.RemoveIdentityMoney = function(player, account, amount)
+function Account:removeMoney(account, amount, cb)
 
-  local ply = Player.fromId(player.source)
-  local identity = ply:getIdentity()
-  local accounts = identity:getAccounts()
+  local oldAmount = self[account]
 
-  local oldQuantity = accounts[account]
-
-
-  if oldQuantity then
-    local newQuantity = oldQuantity - amount
-    accounts[account] = newQuantity
-    emitClient('esx:account:notify', player.source, account, amount, newQuantity)
+  if oldAmount then
+    self[account] = oldAmount - amount
+    if cb ~= nil then cb(true) end
   else
-    -- Invalid Account
-    emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('account_commandderror_account')}})
+    -- Acount does not exists
+    if cb ~= nil then cb(false) end
   end
 
 end
