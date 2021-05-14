@@ -206,7 +206,7 @@ Persist = function(schema, pk, ...)
 
     if tostring(schema) == "identities" then
       for k,v in pairs(fields) do
-        if tostring(k) == "position" or tostring(k) == "roles" or tostring(k) == "status" or tostring(k) == "accounts" then
+        if tostring(k) == "position" or tostring(k) == "roles" or tostring(k) == "status" then
           fields[k] = nil
         end
       end

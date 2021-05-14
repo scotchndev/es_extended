@@ -12,8 +12,8 @@
 
 M('events')
 
-onServer('esx:account:notify', function(account, transactionAmount, balance)
-  Account.Notify(account, transactionAmount, balance)
+onServer('esx:account:notify', function(account, transactionAmount)
+  Account.Notify(account, transactionAmount)
 end)
 
 onServer('esx:account:notEnoughMoney', function(account, money)
@@ -24,6 +24,6 @@ onServer('esx:account:transactionError', function(account)
   Account.TransactionError(account)
 end)
 
-onServer('esx:account:showMoney', function()
-  Account.ShowMoney()
+onServer('esx:account:showMoney', function(accounts)
+  Account.ShowMoney(accounts)
 end)
