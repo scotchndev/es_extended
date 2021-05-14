@@ -78,7 +78,7 @@ function Identity.loadForPlayer(identity, player)
   Identity.all[identityId] = identity
 
   -- Construct account from serialized account
-  identity:field('accounts', Account(identity:getAccounts()))
+  identity:field('accounts', Account(identity:getAccounts(), accounts))
 
   player:setIdentityId(identity:getId())
   player:field('identity', identity)

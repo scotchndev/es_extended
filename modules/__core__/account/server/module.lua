@@ -15,7 +15,27 @@ M('serializable')
 
 Account = Extends(Serializable, 'Account')
 
-function Account:constructor(data)
+function Account:constructor(data, defaultFields)
+
+  if defaultFields then
+
+    for k,v in pairs(defaultFields) do
+
+      if data[k] == nil then
+        data[k] = v
+      end
+
+    end
+
+    for k,_ in pairs(data) do
+
+      if defaultFields[k] == nil then
+        data[k] = nil
+      end
+
+    end
+
+  end
 
   self.super:ctor(data)
 
