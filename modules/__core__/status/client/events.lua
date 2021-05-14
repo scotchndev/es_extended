@@ -26,7 +26,5 @@ onServer('esx:status:damagePlayer', function()
   module.DamagePlayer()
 end)
 
-on('esx:characterLoaded', function()
-  emitServer('esx:status:initialize')
-  module.Init()
-end)
+module.Init()
+

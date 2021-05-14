@@ -17,61 +17,13 @@ module.WeedActive, module.CocaineActive, module.MethActive, module.HeroinActive 
 module.Ready, module.Frame, module.isPaused, module.Sick, module.CurrentAnimSet, module.StatusEffectActive, module.CurrentStrength = false, nil, false, false, nil, false, 0
 
 module.UpdateStatus = function(statuses)
-  if Config.Modules.Status.EnableStatus then
-    if Config.Modules.Status.UseDebugging then
-      print("----START OF EVENT----")
-    end
 
-    if statuses then
-      local Statuses = {}
-      local existingStatuses = {}
+  module.Frame:postMessage({
+    app = "STATUS",
+    method = "setStatus",
+    data = statuses
+  })
 
-      for k,v in pairs(Config.Modules.Status.StatusIndex) do
-        if k then
-          if v then
-            if not existingStatuses[v] then
-              existingStatuses[v] = v
-              if statuses[v] then
-                if statuses[v]["fadeType"] then
-                  if statuses[v]["fadeType"] == "desc" then
-                    if statuses[v]["value"] then
-                      if Config.Modules.Status.UseDebugging then
-                        print("statuses["..v.."][value] = " .. statuses[v]["value"])
-                      end
-
-                      if statuses[v]["value"] < 50 or statuses[v]["value"] == 75 or statuses[v]["value"] == 100 then
-                        table.insert(Statuses, statuses[v])
-                      end
-                    end
-                  elseif statuses[v]["fadeType"] == "asc" then
-                    if statuses[v]["value"] then
-                      if Config.Modules.Status.UseDebugging then
-                        print("statuses["..v.."][value] = " .. statuses[v]["value"])
-                      end
-
-                      if statuses[v]["value"] > 0 then
-                        table.insert(Statuses, statuses[v])
-                      end
-                    end
-                  end
-                end
-              end
-            end
-          end
-        end
-      end
-
-      if Config.Modules.Status.UseDebugging then
-        print("----END OF EVENT----")
-      end
-
-      module.Frame:postMessage({
-        app = "STATUS",
-        method = "setStatus",
-        data = Statuses
-      })
-    end
-  end
 end
 
 module.Frame = Frame('status', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/status/data/html/index.html', true)

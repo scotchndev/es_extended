@@ -109,7 +109,7 @@ module.initIdentity = function(identity)
       else
         local newSpawn = {x = 402.869, y = -996.5966, z = -99.0003, heading = 180.01846313477}
 
-		
+
         module.DoSpawn({
           x        = newSpawn.x,
           y        = newSpawn.y,

@@ -22,27 +22,27 @@
 -- end)
 
 ESX.SetInterval(1, function()
-    if module.DyingActive then
-        DisableControlAction(0,21,true)
-    else
-        Wait(999)
-    end
+  if module.DyingActive then
+    DisableControlAction(0,21,true)
+  else
+    Wait(999)
+  end
 end)
 
 ESX.SetInterval(50, function()
-    if Config.Modules.Status.UseExperimental then
-        if module.DyingActive then
-            if not module.soundPlaying then
-                module.soundID = GetSoundId()
-                module.soundPlaying = true
-                PlaySoundFrontend(module.soundID, "SwitchRedWarning", "SPECIAL_ABILITY_SOUNDSET", 0)
-            end
-        else
-            if module.soundPlaying then
-                module.soundPlaying = false
-                StopSound(module.soundID)
-                ReleaseSoundId(module.soundID)
-            end
-        end
+  if Config.Modules.Status.UseExperimental then
+    if module.DyingActive then
+      if not module.soundPlaying then
+        module.soundID = GetSoundId()
+        module.soundPlaying = true
+        PlaySoundFrontend(module.soundID, "SwitchRedWarning", "SPECIAL_ABILITY_SOUNDSET", 0)
+      end
+    else
+      if module.soundPlaying then
+        module.soundPlaying = false
+        StopSound(module.soundID)
+        ReleaseSoundId(module.soundID)
+      end
     end
+  end
 end)
