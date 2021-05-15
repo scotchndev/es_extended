@@ -1,6 +1,6 @@
 Config.Modules.Status = {
-  EnableStatus       = true,
-  UseDebugging       = true,
+  EnableStatus       = false,
+  UseDebugging       = false,
   UseEffects         = true,
   UseExperimental    = false,
   StatusMax          = 100,
