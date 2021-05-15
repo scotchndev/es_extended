@@ -22,7 +22,7 @@
 -- end)
 
 ESX.SetInterval(1, function()
-  if module.DyingActive then
+  if module.StatusEffectActive == module.Effects.DYING then
     DisableControlAction(0,21,true)
   else
     Wait(999)
@@ -31,7 +31,7 @@ end)
 
 ESX.SetInterval(50, function()
   if Config.Modules.Status.UseExperimental then
-    if module.DyingActive then
+    if module.StatusEffectActive == module.Effects.DYING then
       if not module.soundPlaying then
         module.soundID = GetSoundId()
         module.soundPlaying = true

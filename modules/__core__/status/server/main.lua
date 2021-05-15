@@ -14,23 +14,28 @@ local utils = M('utils')
 M("command")
 
 local setStatus = Command("setStatus", "admin", _U('set_status'))
+setStatus:addArgument("player", "player", _U('commandgeneric_playerid'))
 setStatus:addArgument("statusName", "string", _U('status_name'))
 setStatus:addArgument("value", "number", _U('status_value'))
-setStatus:addArgument("player", "player", _U('commandgeneric_playerid'))
 setStatus:setHandler(function(player, args)
-  if args.statusName and args.value then
-	if not args.player then args.player = player end
-	emitClient("status:setStatusCommand", args.player.source, args.statusName, args.value)
-	return
-  else
-	if not args.statusName then
+  if not args.player then args.player = player end
+
+  if not args.statusName then
 		emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('status_commandderror_statusName')}})
 		return
-	elseif not args.value then
+  elseif not args.value then
 		emitClient("chat:addMessage", player.source, {args = {'^1SYSTEM', _U('status_commanderror_value')}})
 		return
-	end
   end
+
+  --emitClient("status:setStatusCommand", args.player.source, args.statusName, args.value)
+  local player = Player.fromId(args.player.source)
+  local identity = player:getIdentity()
+  local status = identity:getStatus()
+
+  status:setStatus(args.statusName, args.value)
+  module.CheckPlayerStatus(args.player.source, status:serialize())
+
 end)
 
 setStatus:register()
