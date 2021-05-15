@@ -158,7 +158,7 @@ module.CheckPlayerStatus = function(playerId, statuses)
   local statusLow        = false
   local statusDying      = false
   local statusDrunk      = 0
-  local drugName         = "weed"
+  local drugName         = ""
   local statusDrugs      = 0
   local statusStress     = 0
 
@@ -175,6 +175,7 @@ module.CheckPlayerStatus = function(playerId, statuses)
         if k == "drunk" then
           statusDrunk  = v
         elseif k == "weed" and statusDrugs < v then
+          drugName    = "weed"
           statusDrugs  = v
         elseif k == "coicain" and statusDrugs < v then
           drugName    = "cocaine"
