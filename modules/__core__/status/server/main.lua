@@ -28,7 +28,6 @@ setStatus:setHandler(function(player, args)
 		return
   end
 
-  --emitClient("status:setStatusCommand", args.player.source, args.statusName, args.value)
   local player = Player.fromId(args.player.source)
   local identity = player:getIdentity()
   local status = identity:getStatus()

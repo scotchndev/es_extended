@@ -174,15 +174,15 @@ module.CheckPlayerStatus = function(playerId, statuses)
 
         if k == "drunk" then
           statusDrunk  = v
-        elseif k == "weed" then
+        elseif k == "weed" and statusDrugs < v then
           statusDrugs  = v
-        elseif k == "coicain" then
+        elseif k == "coicain" and statusDrugs < v then
           drugName    = "cocaine"
           statusDrugs  = v
-        elseif k == "meth" then
+        elseif k == "meth" and statusDrugs < v then
           drugName    = "meth"
           statusDrugs  = v
-        elseif k == "heroin" then
+        elseif k == "heroin" and statusDrugs < v then
           drugName    = "heroin"
           statusDrugs  = v
         elseif k == "stress" then
