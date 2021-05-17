@@ -99,6 +99,8 @@ module.initIdentity = function(identity)
           initPlayerDeadCheckInterval()
           emit("esx:skin:loadSkin", skin)
 
+          SetEntityHealth(PlayerPedId(), identity.health)
+
           Citizen.Wait(2000)
 
           ShutdownLoadingScreen()
@@ -109,7 +111,7 @@ module.initIdentity = function(identity)
       else
         local newSpawn = {x = 402.869, y = -996.5966, z = -99.0003, heading = 180.01846313477}
 
-		
+
         module.DoSpawn({
           x        = newSpawn.x,
           y        = newSpawn.y,
@@ -137,10 +139,13 @@ module.initIdentity = function(identity)
           initPlayerDeadCheckInterval()
           emit("esx:skin:loadSkin")
 
+          SetEntityHealth(PlayerPedId(), identity.health)
+
           Citizen.Wait(2000)
 
           ShutdownLoadingScreen()
           ShutdownLoadingScreenNui()
+
 
           module.SavePositionInterval = ESX.SetInterval(Config.Modules.identity.playerCoordsSaveInterval * 1000, module.SavePosition)
         end)

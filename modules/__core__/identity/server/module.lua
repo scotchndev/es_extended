@@ -30,6 +30,7 @@ Identity.define({
   {name = 'gender',     field = {name = 'gender',     type = 'VARCHAR',    length = 32,  default = 'male',                extra = nil}},
   {name = 'roles',      field = {name = 'roles',      type = 'MEDIUMTEXT', length = nil, default = '[]',                  extra = nil}, encode = json.encode, decode = json.decode},
   {name = 'status',     field = {name = 'status',     type = 'VARCHAR',    length = 999, default = json.encode(status),   extra = nil}, encode = json.encode, decode = json.decode},
+  {name = 'health',     field = {name = 'health',     type = 'INT',        length = nil, default = 200,                   extra = 'NOT NULL'}, encode = json.encode, decode = json.decode},
   {name = 'accounts',   field = {name = 'accounts',   type = 'VARCHAR',    length = 255, default = json.encode(accounts), extra = nil}, encode = json.encode, decode = json.decode}
 })
 
