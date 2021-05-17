@@ -99,6 +99,8 @@ module.initIdentity = function(identity)
           initPlayerDeadCheckInterval()
           emit("esx:skin:loadSkin", skin)
 
+          SetEntityHealth(PlayerPedId(), identity.health)
+
           Citizen.Wait(2000)
 
           ShutdownLoadingScreen()
@@ -137,10 +139,13 @@ module.initIdentity = function(identity)
           initPlayerDeadCheckInterval()
           emit("esx:skin:loadSkin")
 
+          SetEntityHealth(PlayerPedId(), identity.health)
+
           Citizen.Wait(2000)
 
           ShutdownLoadingScreen()
           ShutdownLoadingScreenNui()
+
 
           module.SavePositionInterval = ESX.SetInterval(Config.Modules.identity.playerCoordsSaveInterval * 1000, module.SavePosition)
         end)

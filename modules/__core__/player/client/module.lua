@@ -32,7 +32,7 @@ function Player:killedByPlayer(killerSid, KillerCid, deathCause)
  local killerCoords = math.roundVec3(GetEntityCoords(GetPlayerPed(KillerCid)))
 
  local distance     = #(victimCoords - killerCoords)
- 
+
   local data = {
     victimCoords = victimCoords,
     killerCoords = killerCoords,
@@ -68,7 +68,6 @@ function Player:getCoords(rounded)
   local coords = GetEntityCoords(PlayerPedId())
 
   if (rounded) then
-    print("try to round")
     return math.roundVec3(coords, 1)
   end
 

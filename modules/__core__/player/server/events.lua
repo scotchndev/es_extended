@@ -27,6 +27,7 @@ AddEventHandler('playerDropped', function(reason)
 		emit('esx:player:drop', player, reason)
 
     if player.identity ~= nil then
+      player.identity:setHealth(GetEntityHealth(GetPlayerPed(source)))
       player.identity:save(function()
         Identity.all[player.identity.id] = nil
       end)
