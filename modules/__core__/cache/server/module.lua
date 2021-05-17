@@ -137,7 +137,7 @@ module.StartCache = function()
   if Config.Modules.Cache.BasicCachedTables then
     for _,tab in pairs(Config.Modules.Cache.BasicCachedTables) do
       if tab == "vehicles" then
-        MySQL.Async.fetchAll('SELECT * FROM vehicles', {}, function(result)
+        exports.ghmattimysql:execute('SELECT * FROM vehicles', {}, function(result)
           if result then
             for i=1,#result,1 do
 
@@ -184,7 +184,7 @@ module.StartCache = function()
           end
         end)
       elseif tab == "usedPlates" then
-        MySQL.Async.fetchAll('SELECT * FROM owned_vehicles', {}, function(result)
+        exports.ghmattimysql:execute('SELECT * FROM owned_vehicles', {}, function(result)
           if result then
 
             if module.Cache["usedPlates"] == nil then
@@ -199,7 +199,7 @@ module.StartCache = function()
       else
         module.Cache[tab] = {}
 
-        MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
+        exports.ghmattimysql:execute('SELECT * FROM ' .. tab, {}, function(result)
           for _,data in ipairs(result) do
             local index = #module.Cache[tab]+1
             module.Cache[tab][index] = {}
@@ -224,7 +224,7 @@ module.StartCache = function()
       if tab == "owned_vehicles" then
         module.Cache[tab] = {}
 
-        MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
+        exports.ghmattimysql:execute('SELECT * FROM ' .. tab, {}, function(result)
           for _,data in ipairs(result) do
             if data.identifier and data.id then
               if not module.Cache[tab][data.identifier] then
@@ -265,7 +265,7 @@ module.StartCache = function()
       else
         module.Cache[tab] = {}
 
-        MySQL.Async.fetchAll('SELECT * FROM ' .. tab, {}, function(result)
+        exports.ghmattimysql:execute('SELECT * FROM ' .. tab, {}, function(result)
           local index = 0
 
           for _,data in ipairs(result) do
@@ -324,7 +324,7 @@ module.SaveCache = function()
 
                 local plate = tostring(data["plate"])
 
-                MySQL.Async.fetchAll('SELECT plate FROM owned_vehicles WHERE plate = @plate', {
+                exports.ghmattimysql:execute('SELECT plate FROM owned_vehicles WHERE plate = @plate', {
                   ['@plate'] = plate
                 }, function(result)
                   if result[1] then
@@ -333,7 +333,7 @@ module.SaveCache = function()
                       print("UPDATE owned_vehicles SET id = "..data["id"]..", identifier = "..data["identifier"]..", vehicle = "..tostring(data["vehicle"])..", stored = "..data["stored"]..", sold = "..data["sold"].." WHERE plate = "..data["plate"])
                     end
 
-                    MySQL.Async.execute('UPDATE owned_vehicles SET id = @id, identifier = @identifier, vehicle = @vehicle, stored = @stored, sold = @sold WHERE plate = @plate', {
+                    exports.ghmattimysql:execute('UPDATE owned_vehicles SET id = @id, identifier = @identifier, vehicle = @vehicle, stored = @stored, sold = @sold WHERE plate = @plate', {
                       ['@id']         = tonumber(data["id"]),
                       ['@identifier'] = tostring(data["identifier"]),
                       ['@vehicle']    = json.encode(data["vehicle"]),
@@ -347,7 +347,7 @@ module.SaveCache = function()
                       print("INSERT INTO owned_vehicles (id, identifier, plate, model, sell_price, vehicle, stored, sold) VALUES ("..data["id"]..", "..data["identifier"]..", "..data["plate"]..", "..data["model"]..", "..data["sell_price"]..", "..tostring(data["vehicle"])..", "..data["stored"]..", "..data["sold"])
                     end
 
-                    MySQL.Async.execute('INSERT INTO owned_vehicles (id, identifier, plate, model, sell_price, vehicle, stored, sold) VALUES (@id, @identifier, @plate, @model, @sell_price, @vehicle, @stored, @sold)', {
+                    exports.ghmattimysql:execute('INSERT INTO owned_vehicles (id, identifier, plate, model, sell_price, vehicle, stored, sold) VALUES (@id, @identifier, @plate, @model, @sell_price, @vehicle, @stored, @sold)', {
                       ['@id']         = tonumber(data["id"]),
                       ['@identifier'] = tostring(data["identifier"]),
                       ['@plate']      = tostring(data["plate"]),
