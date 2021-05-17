@@ -10,10 +10,6 @@
 --   If you redistribute this software, you must link to ORIGINAL repository at https://github.com/ESX-Org/es_extended
 --   This copyright should appear in every part of the project code
 
-onServer('status:setStatusCommand', function(statusName, value)
-  emitServer('esx:status:setStatus', statusName, value)
-end)
-
 onServer('esx:status:updateStatus', function(statuses)
   module.UpdateStatus(statuses)
 end)
@@ -26,7 +22,5 @@ onServer('esx:status:damagePlayer', function()
   module.DamagePlayer()
 end)
 
-on('esx:characterLoaded', function()
-  emitServer('esx:status:initialize')
-  module.Init()
-end)
+module.Init()
+

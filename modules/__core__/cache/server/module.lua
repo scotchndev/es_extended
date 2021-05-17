@@ -130,71 +130,6 @@ module.AddUsedPlates = function(cacheName, updateData)
 end
 
 -------------------------
---      Statuses       --
--------------------------
-
-module.RetrieveStatuses = function(identifier, id)
-  if module.Cache["identities"] then
-    if not module.Cache["identities"][identifier] then
-      module.Cache["identities"][identifier] = {}
-    end
-
-    if not module.Cache["identities"][identifier][id] then
-      module.Cache["identities"][identifier][id] = {}
-    end
-
-    if module.Cache["identities"][identifier][id]["status"] then
-      return module.Cache["identities"][identifier][id]["status"]
-    else
-      return nil
-    end
-  else
-    return nil
-  end
-end
-
-module.UpdateStatus = function(identifier, id, queryIndex, data)
-  if Config.Modules.Cache.EnableDebugging then
-    print("module.UpdateStatus received")
-  end
-
-  if not module.Cache["identities"] then
-    module.Cache["identities"] = {}
-  end
-
-  if not module.Cache["identities"][identifier] then
-    module.Cache["identities"][identifier] = {}
-  end
-
-  if not module.Cache["identities"][identifier][id] then
-    module.Cache["identities"][identifier][id] = {}
-  end
-
-  if not module.Cache["identities"][identifier][id]["status"] then
-    module.Cache["identities"][identifier][id]["status"] = {}
-  end
-
-  for k,v in pairs(queryIndex) do
-    if not module.Cache["identities"][identifier][id]["status"][v] then
-      if Config.Modules.Cache.EnableDebugging then
-        print("["..identifier.."] Creating status for " .. v)
-      end
-
-      module.Cache["identities"][identifier][id]["status"][v] = nil
-    end
-
-    if data[v] then
-      if data[v]["value"] then
-        if Config.Modules.Cache.EnableDebugging then
-          print("module.Cache[identities]["..identifier.."]["..id.."][\"status\"]["..v.."] = " .. data[v]["value"])
-        end
-        module.Cache["identities"][identifier][id]["status"][v] = data[v]["value"]
-      end
-    end
-  end
-end
-
--------------------------
 --        CORE         --
 -------------------------
 
@@ -286,35 +221,7 @@ module.StartCache = function()
 
   if Config.Modules.Cache.IdentityCachedTables then
     for _,tab in pairs(Config.Modules.Cache.IdentityCachedTables) do
-      if tab == "identities" then
-        module.Cache[tab] = {}
-
-        exports.ghmattimysql:execute('SELECT * FROM ' .. tab, {}, function(result)
-          for _,data in ipairs(result) do
-            if data.owner and data.id then
-              if not module.Cache[tab][data.owner] then
-                module.Cache[tab][data.owner] = {}
-              end
-
-              if not module.Cache[tab][data.owner][data.id] then
-                module.Cache[tab][data.owner][data.id] = {}
-              end
-
-              for k,v in pairs(data) do
-                if k == "status" then
-                  if not module.Cache[tab][data.owner][data.id][k] then
-                    if Config.Modules.Cache.EnableDebugging then
-                      print("module.Cache["..tostring(tab).."]["..tostring(data.owner).."]["..tostring(data.id).."]["..tostring(k).."] = "..tostring(v))
-                    end
-
-                    module.Cache[tab][data.owner][data.id][k] = json.decode(v)
-                  end
-                end
-              end
-            end
-          end
-        end)
-      elseif tab == "owned_vehicles" then
+      if tab == "owned_vehicles" then
         module.Cache[tab] = {}
 
         exports.ghmattimysql:execute('SELECT * FROM ' .. tab, {}, function(result)
@@ -452,26 +359,6 @@ module.SaveCache = function()
                     })
                   end
                 end)
-              end
-            end
-          end
-        end
-      elseif tab == "identities" then
-        if module.Cache[tab] then
-          for k,v in pairs(module.Cache[tab]) do
-            for k2,v2 in pairs(module.Cache[tab][k]) do
-              for k3,data in pairs(module.Cache[tab][k][k2]) do
-                if k3 == "status" then
-                  if Config.Modules.Cache.EnableDebugging then
-                    print("Updating Status In Cache For : ^2" .. tostring(k) .. "^7 with IdentityId ^2" .. tostring(k2) .. "^7")
-                  end
-
-                  exports.ghmattimysql:execute('UPDATE identities SET status = @status WHERE id = @id AND owner = @owner', {
-                    ['@status'] = json.encode(data),
-                    ['@id']     = tonumber(k2),
-                    ['@owner']  = tostring(k)
-                  })
-                end
               end
             end
           end

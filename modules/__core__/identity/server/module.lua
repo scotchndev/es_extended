@@ -80,6 +80,9 @@ function Identity.loadForPlayer(identity, player)
   -- Construct account from serialized account
   identity:field('accounts', Account(identity:getAccounts(), accounts))
 
+  -- Construct status from serialized status
+  identity:field('status', Status(identity:getStatus()), status)
+
   player:setIdentityId(identity:getId())
   player:field('identity', identity)
 
