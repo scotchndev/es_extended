@@ -22,8 +22,8 @@ module.WalletShowing = false
 Account = {}
 Account.Ready, Account.Frame, Account.isPaused = false, nil, false
 
-Account.Notify = function(account, transactionAmount, balance)
-  utils.ui.showNotification(_U('account_notify_moneychange', _U('account_moniker'), transactionAmount, account, _U('account_moniker'), balance))
+Account.Notify = function(account, transactionAmount)
+  utils.ui.showNotification(_U('account_notify_moneychange', _U('account_moniker'), transactionAmount, account))
 end
 
 Account.NotEnoughMoney = function(account, money)
@@ -34,30 +34,24 @@ Account.TransactionError = function(account)
   utils.ui.showNotification(_U('account_notify_transaction_error', account))
 end
 
-Account.ShowMoney = function()
+Account.ShowMoney = function(accounts)
+
   local Accounts = {}
+  local index = 0
 
-  request('esx:account:getPlayerAccounts', function(data)
-    if data then
-      local Accounts = {}
-      local index = 0
+  for k,v in pairs(accounts) do
+    index = index + 1
+    Accounts[index] = {
+      id = index,
+      type = k,
+      amount = v
+    }
+  end
 
-      for k,v in pairs(Config.Modules.Account.AccountsIndex) do
-        if data[v] and not Accounts[v] then
-          index = index + 1
-          table.insert(Accounts, {
-            id = index,
-            type = v,
-            amount = data[v]
-          })
-        end
-      end
+  module.Frame:postMessage({
+    data = Accounts
+  })
 
-      module.Frame:postMessage({
-        data = Accounts
-      })
-    end
-  end)
 end
 
 module.Frame = Frame('account', 'https://cfx-nui-' .. __RESOURCE__ .. '/modules/__core__/account/data/html/index.html', true)
