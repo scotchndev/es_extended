@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "csv": "^5.0.0",
-    "sheets-api": "^1.0.5",
+    "sheets-api": "^1.0.8",
     "xml2js": "^0.4.19"
   }
 }
